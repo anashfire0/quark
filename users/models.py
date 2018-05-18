@@ -8,3 +8,6 @@ class CustomUserManager(UserManager):
 
 class CustomUser(AbstractUser):
     objects = CustomUserManager()
+
+    def __str__(self):
+        return f'{self.username} - {self.get_full_name()}'

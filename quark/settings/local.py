@@ -25,7 +25,7 @@ SECRET_KEY = 'z%@gj@#uaukdu0z6kevsp-t%*jcy!#$erhm2o)srmk7uqlbt9-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -126,4 +127,6 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static-storage'),)
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static-serve')
 
+#settings custom user model
 AUTH_USER_MODEL = 'users.CustomUser'
+
