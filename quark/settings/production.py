@@ -79,8 +79,8 @@ DATABASES = {
         'NAME': 'quarkdb',
         'HOST': 'localhost',
         'PORT': '5432',
-        'USER': os.environ.get('DB_USER')
-        'PASSWORD': os.environ.get('DB_PASSWORD')
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
     }
 }
 
@@ -122,7 +122,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static-storage'))
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static-storage'),)
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static-serve')
 
-AUTH_USER_MODEL = 'users.CustomUser'
+# AUTH_USER_MODEL = 'users.CustomUser'
