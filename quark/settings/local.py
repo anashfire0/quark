@@ -130,3 +130,11 @@ STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static-serve')
 #settings custom user model
 AUTH_USER_MODEL = 'users.CustomUser'
 
+
+#Media files
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media-serve')
+
+#authentication 
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'
