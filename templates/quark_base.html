@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>
+			{% block title %}
+				Quark 
+			{% endblock title %}
+	</title>
+</head>
+<body>
+	<ul>
+		<li>home</li>
+		{% if user.is_authenticated %}
+			<li>	Hi, {{ user.username }}</li>
+			<li><a href="{% url 'users:logout' %}">logout</a></li>
+		{% else %}
+			<li>You are not logged in.</li>
+			<li><a href="{% url 'users:login' %}?next={{ request.path }}">login</a></li>
+		{% endif %}
+	</ul>
+	{% block content %}
+	{% endblock content %}
+</body>
+</html>

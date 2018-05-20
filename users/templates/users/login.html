@@ -1,0 +1,21 @@
+{% extends parent_template|default:"users/base.html" %}
+
+{% block title %}
+	{{ block.super }} - login
+{% endblock title %}
+
+{% block content %}
+	<h2>login</h2>
+	{% if user.is_authenticated %}
+		<p>You are already logged in</p>	
+		{# <a href="{{ request.path }}">go back</a> #}
+	{% else %}
+	<form action="" method="post">
+		{% csrf_token %}
+		{{ form.as_p }}
+		<input type="hidden" name="next" value="{{ next }}">	
+		<button type="submit">Login</button>
+	</form>
+	{% endif %}
+	{{ red }}
+{% endblock content %}
