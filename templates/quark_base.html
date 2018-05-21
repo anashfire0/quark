@@ -15,8 +15,8 @@
 			<li>	Hi, {{ user.username }}</li>
 			<li><a href="{% url 'users:logout' %}">logout</a></li>
 		{% else %}
-			<li>You are not logged in.</li>
 			<li><a href="{% url 'users:login' %}?next={{ request.path }}">login</a></li>
+			<li><a href="{% url 'users:signup' %}">Sign Up</a></li>
 		{% endif %}
 	</ul>
 	{% block content %}
