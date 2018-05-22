@@ -1,6 +1,9 @@
 from django.shortcuts import render
 from django.views import generic
-from django.contrib.auth.views import LoginView, PasswordChangeView
+from django.contrib.auth.views import (
+    LoginView, PasswordChangeView, PasswordResetView, PasswordResetConfirmView,
+    PasswordResetDoneView, PasswordResetCompleteView,
+    )
 from django.conf import settings
 from django.urls import reverse_lazy
 from .forms import CustomUserCreationForm
@@ -36,3 +39,21 @@ class SignUpView(generic.CreateView):
 class CustomPasswordChangeView(PasswordChangeView):
     template_name = 'users/registration/password_change.html'
     success_url = reverse_lazy('users:password_change_complete')
+
+class CustomPasswordResetView(PasswordResetView):
+    template_name = 'users/registration/password_reset_form.html'
+    email_template_name = 'users/registration/password_reset_email.html'
+    subject_template_name = 'users/registration/password_reset_subject.txt'
+    success_url = reverse_lazy('users:password_reset_done')
+
+
+class CustomPasswordResetDoneView(PasswordResetDoneView):
+    template_name = 'users/registration/password_reset_done.html'
+
+
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    success_url = reverse_lazy('users:password_reset_complete')
+    template_name = 'users/registration/password_reset_confirm.html'
+
+class CustomPasswordResetCompleteView(PasswordResetCompleteView):
+    template_name = 'users/registration/password_reset_complete.html'

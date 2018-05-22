@@ -12,4 +12,12 @@ urlpatterns = [
             views.CustomPasswordChangeView.as_view(), name='password_change'),
     re_path('^password_change/complete/$',
             auth_views.PasswordChangeDoneView.as_view(template_name='users/registration/password_change_complete.html'), name='password_change_complete'),
+    re_path('^password_reset/$', views.CustomPasswordResetView.as_view(),
+            name='password_reset'),
+    re_path('^password_reset/done/$',
+            views.CustomPasswordResetDoneView.as_view(), name='password_reset_done'),
+    re_path('^password_reset_confirm/(?P<uidb64>\w+)/(?P<token>[\w\-]+)/$',
+            views.CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    re_path('^password_reset_confirm/complete/$',
+            views.CustomPasswordResetCompleteView.as_view(), name='password_reset_complete'),
 ]

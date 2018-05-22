@@ -1,0 +1,21 @@
+from django.db import models
+from users.models import CustomUser
+
+# Create your models here.
+
+
+class Reminder(models.Model):
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, related_name='reminders')
+    title = models.CharField('Title', max_length=256,
+                             help_text='Quick summary of your reminder.')
+    slug = models.SlugField('Slug', max_length=256)
+    text = models.TextField('Text')
+    created_on = models.DateTimeField('Created on', auto_now_add=True)
+    timed_on = models.DateTimeField('Timed on')
+    reminded_count = models.PositiveIntegerField('Reminded count')
+
+    def __str__(self):
+        trunc_text = slice(30)
+        s = f'{self.user.username} - {self.title} - '
+        return s + f'{self.text[trunc_text]}...' if len(self.text) > 50 else s + f'{self.text}'

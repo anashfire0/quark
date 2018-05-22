@@ -12,7 +12,7 @@ class CustomUser(AbstractUser):
     objects = CustomUserManager()
 
     def __str__(self):
-        return f'{self.username} - {self.get_full_name()}'
+        return f'{self.username} - {self.get_full_name()}' if self.get_full_name() else f'{self.username}'
 
 
 class Profile(models.Model):
