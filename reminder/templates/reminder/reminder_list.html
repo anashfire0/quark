@@ -1,0 +1,19 @@
+{% extends parent_template|default:"reminder/reminder_base.html" %}
+
+{% block title %}
+	{{ block.super }} - Reminders
+{% endblock title %}
+
+{% block content %}
+	<ul>
+	{% for reminder in reminders %}
+		<li>
+			<a href="{{ reminder.get_absolute_url }}">{{ reminder.title|title}}</a> set on  
+			{# {{ reminder.timed_on |date:'h:i d-b, y'}} #}
+			{{ reminder.timed_on |date:'h:i a, jS b, Y'}}
+		</li>	
+		{% empty %}
+			<p>You have not set any reminders</p>			
+	{% endfor %}
+	</ul>
+{% endblock content %}

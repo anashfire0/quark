@@ -22,5 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     re_path('^$', HomeView.as_view(), name='home'),
     re_path('^users/', include('users.urls')),
-    # re_path('^reminders/', include('reminder.urls')),
+    re_path('^reminders/', include('reminder.urls')),
 ]

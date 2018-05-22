@@ -1,0 +1,13 @@
+{% extends parent_template|default:"reminder/reminder_base.html" %}
+
+{% block title %}
+	{{ block.super }} - {{ reminder.title|title }}
+{% endblock title %}
+
+{% block content %}
+	<ul>
+		<li>{{ reminder.title }}</li>
+		<li>{{ reminder.text }}</li>
+		<li>reminded {{ reminder.reminded_count }} time{{ reminder.reminded_count|pluralize }}</li>
+	</ul>
+{% endblock content %}
