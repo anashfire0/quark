@@ -138,3 +138,6 @@ MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media-serve')
 #authentication 
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
+
+#email configuration
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
