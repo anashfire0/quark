@@ -1,0 +1,13 @@
+{% extends parent_template|default:"reminder/reminder_base.html" %}
+
+{% block title %}
+	{{ block.super }} - Set Reminder
+{% endblock title %}
+
+{% block content %}
+	<form action="" method="post">
+		{% csrf_token %}
+		{{ form.as_p }}
+		<button type="submit">Set The Reminder</button>
+	</form>
+{% endblock content %}

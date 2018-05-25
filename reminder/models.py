@@ -10,7 +10,7 @@ class Reminder(models.Model):
         CustomUser, on_delete=models.CASCADE, related_name='reminders')
     title = models.CharField('Title', max_length=256,
                              help_text='Quick summary of your reminder.')
-    slug = models.SlugField('Slug', max_length=256, unique=True)
+    slug = models.SlugField('Slug', max_length=256)
     text = models.TextField('Text')
     created_on = models.DateTimeField('Created on', auto_now_add=True)
     timed_on = models.DateTimeField('Timed on')
