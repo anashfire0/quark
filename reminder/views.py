@@ -1,9 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
 from django.views.generic.base import ContextMixin
 from .models import Reminder
-from .forms import CreateReminderForm
+from .forms import CreateReminderForm, EditReminderForm
 
 # Create your views here.
 
@@ -20,19 +20,39 @@ class ReminderDetailView(generic.DetailView):
 class CreateReminderView(ContextMixin, generic.View):
     template_name = 'reminder/create_reminder.html'
     form_class = CreateReminderForm
-    success_url = reverse_lazy('reminder:reminder_list')
 
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name, self.get_context_data(
             form = self.form_class(), **kwargs))
 
     def post(self, request, *args, **kwargs):
-        print(str(request.POST).center(1000, '$'))
         bound_form = self.form_class(request.POST)
-        context = self.get_context_data(**kwargs)
-        context.update({'form': bound_form})
         if not bound_form.is_valid():
+            context = self.get_context_data(**kwargs)
+            context.update({'form': bound_form})
             return render(request, self.template_name, context)
-        if bound_form.is_valid():
-            return redirect(bound_form.save()) 
+        return redirect(bound_form.save()) 
 
+class  EditReminderView(generic.TemplateView):
+    template_name = 'reminder/reminder_update.html'
+    form_class = EditReminderForm
+    model = Reminder
+
+    def get(self, request, slug, *args, **kwargs):
+        obj = self.model.objects.get(slug=slug)
+        initial = {'user' : obj.user,
+        'title' : obj.title,
+        'text' : obj.text,
+        'date' : obj.timed_on.date(),
+        'time' : obj.timed_on.time().replace(second=0),}
+        stored_form = self.form_class(initial=initial)
+        return render(request, self.template_name, self.get_context_data(
+            form=stored_form, **kwargs))
+
+    def post(self, request, slug, *args, **kwargs):
+        bound_form = self.form_class(request.POST)
+        if not bound_form.is_valid():
+            context = self.get_context_data(**kwargs)
+            context.update({'form': bound_form})
+            return render(request, self.template_name, context)
+        return redirect(bound_form.save(slug))

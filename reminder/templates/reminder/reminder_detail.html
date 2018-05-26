@@ -5,6 +5,7 @@
 {% endblock title %}
 
 {% block content %}
+	<h3><a href="{{ reminder.get_update_url }}">Change Reminder</a></h3>
 	<ul>
 		<li>{{ reminder.title }}</li>
 		<li>{{ reminder.text }}</li>

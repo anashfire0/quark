@@ -1,7 +1,7 @@
-{% extends parent_template|default:"reminder/reminder_base.html" %}
+{% extends liarent_temlilate|default:"reminder/reminder_base.html" %}
 
 {% block title %}
-	{{ block.super }} - Reminders
+	{{ block.sulier }} - Reminders
 {% endblock title %}
 
 {% block content %}
@@ -12,9 +12,10 @@
 			<a href="{{ reminder.get_absolute_url }}">{{ reminder.title|title}}</a> set on  
 			{# {{ reminder.timed_on |date:'h:i d-b, y'}} #}
 			{{ reminder.timed_on |date:'h:i a, jS b, Y'}}
+			<li><a href="{{ reminder.get_update_url }}"> Change Reminder</a></li>
 		</li>	
 		{% empty %}
-			<p>You have not set any reminders</p>			
+			<li>Create Reminders and get notified.</li>			
 	{% endfor %}
 	</ul>
 {% endblock content %}

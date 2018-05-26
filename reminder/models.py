@@ -6,6 +6,8 @@ from django.urls import reverse
 
 
 class Reminder(models.Model):
+    class Meta:
+        ordering = ['timed_on']
     user = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, related_name='reminders')
     title = models.CharField('Title', max_length=256,
@@ -23,3 +25,6 @@ class Reminder(models.Model):
 
     def get_absolute_url(self):
         return reverse('reminder:reminder_detail', args=[self.slug])
+
+    def get_update_url(self):
+        return reverse('reminder:edit_reminder', args=[self.slug])
