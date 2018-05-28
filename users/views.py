@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, Http404
 from django.views import generic
 from django.contrib.auth.views import (
     LoginView, PasswordChangeView, PasswordResetView, PasswordResetConfirmView,
@@ -6,7 +6,10 @@ from django.contrib.auth.views import (
     )
 from django.conf import settings
 from django.urls import reverse_lazy
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, ProfileCreateForm
+from .models import Profile
+from django.contrib.auth import get_user
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 
@@ -57,3 +60,27 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
 
 class CustomPasswordResetCompleteView(PasswordResetCompleteView):
     template_name = 'users/registration/password_reset_complete.html'
+
+
+class ProfileCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Profile
+    form_class = ProfileCreateForm
+    template_name = 'users/profile/profile_create.html'
+    success_url = reverse_lazy('reminder:reminder_list')
+
+
+class ProfileEditView(LoginRequiredMixin, generic.UpdateView):
+    form_class = ProfileCreateForm
+    template_name = 'users/profile/profile_create.html'
+    success_url = reverse_lazy('reminder:reminder_list')
+
+    def get_object(self):
+        try:
+            user = get_user(self.request)
+        except AttributeError:
+            raise Http404('Session Expired') 
+        else:
+            return user.profile
+
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)

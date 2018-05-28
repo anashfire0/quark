@@ -28,3 +28,6 @@ class Reminder(models.Model):
 
     def get_update_url(self):
         return reverse('reminder:edit_reminder', args=[self.slug])
+
+    def get_delete_url(self):
+        return reverse('reminder:delete_reminder', args=[self.slug])

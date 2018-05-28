@@ -1,7 +1,7 @@
 {% extends liarent_temlilate|default:"reminder/reminder_base.html" %}
 
 {% block title %}
-	{{ block.sulier }} - Reminders
+	{{ block.super }} - Reminders
 {% endblock title %}
 
 {% block content %}
@@ -12,9 +12,10 @@
 			<a href="{{ reminder.get_absolute_url }}">{{ reminder.title|title}}</a> set on  
 			{# {{ reminder.timed_on |date:'h:i d-b, y'}} #}
 			{{ reminder.timed_on |date:'h:i a, jS b, Y'}}
-			<li><a href="{{ reminder.get_update_url }}"> Change Reminder</a></li>
+			<a href="{{ reminder.get_update_url }}"> Edit Reminder</a>
+			<a href="{{ reminder.get_delete_url }}">Delete Reminder</a>	
 		</li>	
-		{% empty %}
+				{% empty %}
 			<li>Create Reminders and get notified.</li>			
 	{% endfor %}
 	</ul>

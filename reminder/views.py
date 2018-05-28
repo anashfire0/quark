@@ -4,20 +4,21 @@ from django.views import generic
 from django.views.generic.base import ContextMixin
 from .models import Reminder
 from .forms import CreateReminderForm, EditReminderForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 
-class ReminderListView(generic.ListView):
+class ReminderListView(LoginRequiredMixin, generic.ListView):
     model = Reminder
     template_name = 'reminder/reminder_list.html'
     context_object_name = 'reminders'
 
-class ReminderDetailView(generic.DetailView):
+class ReminderDetailView(LoginRequiredMixin, generic.DetailView):
     model = Reminder
     template_name = 'reminder/reminder_detail.html'
     context_object_name = 'reminder'
 
-class CreateReminderView(ContextMixin, generic.View):
+class CreateReminderView(LoginRequiredMixin, ContextMixin, generic.View):
     template_name = 'reminder/create_reminder.html'
     form_class = CreateReminderForm
 
@@ -33,7 +34,7 @@ class CreateReminderView(ContextMixin, generic.View):
             return render(request, self.template_name, context)
         return redirect(bound_form.save()) 
 
-class  EditReminderView(generic.TemplateView):
+class  EditReminderView(LoginRequiredMixin, generic.TemplateView):
     template_name = 'reminder/reminder_update.html'
     form_class = EditReminderForm
     model = Reminder
@@ -56,3 +57,18 @@ class  EditReminderView(generic.TemplateView):
             context.update({'form': bound_form})
             return render(request, self.template_name, context)
         return redirect(bound_form.save(slug))
+
+class DeleteReminderView(LoginRequiredMixin, generic.TemplateView):
+    template_name = 'reminder/reminder_delete.html'
+    model = Reminder
+    success_url = reverse_lazy('reminder:reminder_list')
+
+    def get(self, request, slug, *args, **kwargs):
+        obj = get_object_or_404(self.model, slug__iexact=slug)
+        return render(request, self.template_name, self.get_context_data(reminder= obj, **kwargs))
+
+    def post(self, request, slug, *args, **kwargs):
+        if request.POST['to_delete']:
+            self.model.objects.get(slug__iexact=slug).delete()
+            return redirect(self.success_url)
+        return redirect(reverse_lazy('reminder:reminder_detail', args=[slug]))

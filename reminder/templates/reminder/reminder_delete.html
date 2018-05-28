@@ -1,0 +1,13 @@
+{% extends parent_template|default:"reminder/reminder_base.html" %}
+{% block title %}
+	{{ block.super }} - Delete Reminder
+{% endblock title %}
+
+{% block content %}
+<p>Are you sure you want to delete {{ reminder.title }}?</p>
+	<form action="" method="post">
+		{% csrf_token %}
+		<button name="to_delete" value="yes" type="submit">Yes</button>
+		<button name="to_delete" type="submit">No</button>
+	</form>
+{% endblock content %}

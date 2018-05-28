@@ -21,6 +21,6 @@ from users.views import HomeView
 urlpatterns = [
     path('admin/', admin.site.urls),
     re_path('^$', HomeView.as_view(), name='home'),
-    re_path('^users/', include('users.urls')),
+    re_path('^users/', include('users.urls.users',)),
     re_path('^reminders/', include('reminder.urls')),
 ]
