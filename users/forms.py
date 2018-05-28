@@ -19,16 +19,14 @@ class CustomUserChangeForm(UserChangeForm):
         model = CustomUser
         fields = UserChangeForm.Meta.fields
 
-class ProfileCreateForm(forms.ModelForm):
+class ProfileCreateForm(forms.Form):
 
-    class Meta:
-        model = Profile
-        fields = '__all__'
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user')
+        super().__init__(*args, **kwargs)
 
-    # def clean_profile_pic(self):
-    #     try:
-    #         size = 512, 512
-    #         return Image.open(self.cleaned_data['profile_pic']).thumbnail(size)
-    #     except KeyError:
-    #         print('ERROR'.center(1000,'%'))
-
+    email = forms.EmailField()
+    first_name = forms.CharField(label='First Name', max_length=128, required=False)
+    last_name = forms.CharField(label='First Name', max_length=128, required=False)
+    phone_no = forms.RegexField(regex=r'^\+?\d{10,12}$', error_messages={"invalid":("Enter a valid number")})
+    profile_pic = forms.ImageField(required=False)

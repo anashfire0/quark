@@ -62,11 +62,15 @@ class CustomPasswordResetCompleteView(PasswordResetCompleteView):
     template_name = 'users/registration/password_reset_complete.html'
 
 
-class ProfileCreateView(LoginRequiredMixin, generic.CreateView):
+class ProfileCreateView(LoginRequiredMixin, generic.TemplateView):
     model = Profile
     form_class = ProfileCreateForm
     template_name = 'users/profile/profile_create.html'
     success_url = reverse_lazy('reminder:reminder_list')
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, self.get_context_data(
+            form=self.form_class(user=get_user(request)), **kwargs))
 
 
 class ProfileEditView(LoginRequiredMixin, generic.UpdateView):
