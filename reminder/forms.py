@@ -15,7 +15,11 @@ class TimeInput(forms.TimeInput):
 
 
 class BaseReminderForm(forms.Form):
-    user = forms.ModelChoiceField(get_user_model().objects.all())
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user')
+        super().__init__(*args, **kwargs)
+
     title = forms.CharField(max_length=256)
     text = forms.CharField(widget=forms.Textarea())
     date = forms.DateField(widget=DateInput())
@@ -31,7 +35,7 @@ class CreateReminderForm(
 
     def save(self, commit=True):
         reminder_entry = {
-            'user': self.cleaned_data['user'],
+            'user': self.user,
             'title': self.cleaned_data['title'],
             'text': self.cleaned_data['text'],
             'slug': self.cleaned_data['slug'],
@@ -54,8 +58,8 @@ class EditReminderForm(
         return self.cleaned_data['title'].lower()
 
     def save(self, slug, commit=True):
-        obj = Reminder.objects.get(slug__iexact=slug)
-        obj.user = self.cleaned_data['user']
+        obj = self.user.reminders.get(slug__iexact=slug)
+        obj.user = self.user
         obj.title =self.cleaned_data['title']
         obj.slug = self.cleaned_data['slug']
         obj.text =self.cleaned_data['text']

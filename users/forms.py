@@ -20,6 +20,7 @@ class CustomUserChangeForm(UserChangeForm):
         fields = UserChangeForm.Meta.fields
 
 class ProfileCreateForm(forms.ModelForm):
+
     class Meta:
         model = Profile
         fields = '__all__'

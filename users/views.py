@@ -82,5 +82,8 @@ class ProfileEditView(LoginRequiredMixin, generic.UpdateView):
         else:
             return user.profile
 
+    def get(self, request):
+        return super().get(self, request)
+
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)

@@ -5,13 +5,17 @@ from django.views.generic.base import ContextMixin
 from .models import Reminder
 from .forms import CreateReminderForm, EditReminderForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import get_user
 
 # Create your views here.
 
 class ReminderListView(LoginRequiredMixin, generic.ListView):
-    model = Reminder
     template_name = 'reminder/reminder_list.html'
     context_object_name = 'reminders'
+
+    def get(self, request, *args, **kwargs):
+        self.queryset = get_user(request).reminders.all()
+        return super().get(request, *args, **kwargs)
 
 class ReminderDetailView(LoginRequiredMixin, generic.DetailView):
     model = Reminder
@@ -23,11 +27,13 @@ class CreateReminderView(LoginRequiredMixin, ContextMixin, generic.View):
     form_class = CreateReminderForm
 
     def get(self, request, *args, **kwargs):
+        user = get_user(request)
         return render(request, self.template_name, self.get_context_data(
-            form = self.form_class(), **kwargs))
+            form = self.form_class(user=user), **kwargs))
 
     def post(self, request, *args, **kwargs):
-        bound_form = self.form_class(request.POST)
+        user = get_user(request)
+        bound_form = self.form_class(request.POST, user=user)
         if not bound_form.is_valid():
             context = self.get_context_data(**kwargs)
             context.update({'form': bound_form})
@@ -40,18 +46,20 @@ class  EditReminderView(LoginRequiredMixin, generic.TemplateView):
     model = Reminder
 
     def get(self, request, slug, *args, **kwargs):
+        user = get_user(request)
         obj = self.model.objects.get(slug=slug)
         initial = {'user' : obj.user,
         'title' : obj.title,
         'text' : obj.text,
         'date' : obj.timed_on.date(),
         'time' : obj.timed_on.time().replace(second=0),}
-        stored_form = self.form_class(initial=initial)
+        stored_form = self.form_class(initial=initial, user=user)
         return render(request, self.template_name, self.get_context_data(
             form=stored_form, **kwargs))
 
     def post(self, request, slug, *args, **kwargs):
-        bound_form = self.form_class(request.POST)
+        user = get_user(request)
+        bound_form = self.form_class(request.POST,user=user)
         if not bound_form.is_valid():
             context = self.get_context_data(**kwargs)
             context.update({'form': bound_form})

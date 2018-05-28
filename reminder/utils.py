@@ -25,13 +25,12 @@ class SlugDateTimeCleanMixin:
         return self.cleaned_data
 
     def slug_more(self, slug):
-        obj = self.cleaned_data['user']
         suffix = 1
-        if obj.reminders.filter(slug=slug).exists():
+        if self.user.reminders.filter(slug=slug).exists():
             while(True):
                 test_slug = slug
                 test_slug += '-' + str(suffix)
-                if obj.reminders.filter(slug=test_slug).exists():
+                if self.user.reminders.filter(slug=test_slug).exists():
                     suffix += 1
                 else:
                     return test_slug
