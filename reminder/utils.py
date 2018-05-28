@@ -4,12 +4,14 @@ from django.utils.text import slugify
 from datetime import datetime
 
 class DateCleanMixin:
+
      def clean_date(self):
         if self.cleaned_data['date'] < timezone.now().date():
             raise ValidationError("Date cannot be in the past")
         return self.cleaned_data['date']
 
 class SlugDateTimeCleanMixin:
+
     def clean(self):
         if self.cleaned_data.get('date', None):
             if self.cleaned_data['date'] == timezone.localdate():
