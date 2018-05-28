@@ -57,6 +57,7 @@ class EditReminderForm(
         obj = Reminder.objects.get(slug__iexact=slug)
         obj.user = self.cleaned_data['user']
         obj.title =self.cleaned_data['title']
+        obj.slug = self.cleaned_data['slug']
         obj.text =self.cleaned_data['text']
         obj.timed_on = self.cleaned_data['timed_on']
         if commit:

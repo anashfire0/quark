@@ -14,6 +14,7 @@
 			{{ reminder.timed_on |date:'h:i a, jS b, Y'}}
 			<a href="{{ reminder.get_update_url }}"> Edit Reminder</a>
 			<a href="{{ reminder.get_delete_url }}">Delete Reminder</a>	
+			<span> created by {{ reminder.user.username }}</span>
 		</li>	
 				{% empty %}
 			<li>Create Reminders and get notified.</li>			
