@@ -3,5 +3,5 @@ from .. import views
 
 
 urlpatterns = [
-    re_path(r'edit/$', views.ProfileCreateView.as_view(), name='profile_edit'),
+    re_path(r'edit/$', views.ProfileView.as_view(), name='profile_edit'),
 ]

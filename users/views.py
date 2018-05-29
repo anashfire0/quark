@@ -10,6 +10,7 @@ from .forms import CustomUserCreationForm, ProfileForm
 from .models import Profile
 from django.contrib.auth import get_user
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 
 # Create your views here.
 
@@ -62,10 +63,11 @@ class CustomPasswordResetCompleteView(PasswordResetCompleteView):
     template_name = 'users/registration/password_reset_complete.html'
 
 
-class ProfileCreateView(LoginRequiredMixin, generic.FormView):
+class ProfileView(LoginRequiredMixin, SuccessMessageMixin, generic.FormView):
     form_class = ProfileForm
     template_name = 'users/profile/profile_create.html'
-    success_url = reverse_lazy('reminder:reminder_list')
+    success_url = reverse_lazy('users:profile_edit')
+    success_message = "Profile updated."
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
