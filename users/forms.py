@@ -19,7 +19,7 @@ class CustomUserChangeForm(UserChangeForm):
         model = CustomUser
         fields = UserChangeForm.Meta.fields
 
-class ProfileCreateForm(forms.Form):
+class ProfileForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user')
@@ -28,5 +28,21 @@ class ProfileCreateForm(forms.Form):
     email = forms.EmailField()
     first_name = forms.CharField(label='First Name', max_length=128, required=False)
     last_name = forms.CharField(label='First Name', max_length=128, required=False)
-    phone_no = forms.RegexField(regex=r'^\+?\d{10,12}$', error_messages={"invalid":("Enter a valid number")})
+    phone_no = forms.RegexField(regex=r'^\+?\d{10,12}$', error_messages={"invalid":("Enter a valid number")}, required=False)
     profile_pic = forms.ImageField(required=False)
+
+    def clean_first_name(self):
+        return self.cleaned_data['first_name'].title()
+
+    def clean_last_name(self):
+        return self.cleaned_data['last_name'].title()
+
+    def save(self):
+        self.user.email = self.cleaned_data['email']
+        self.user.first_name = self.cleaned_data['first_name']
+        self.user.last_name = self.cleaned_data['last_name']
+        self.user.profile.phone_no = self.cleaned_data['phone_no']
+        self.user.profile.profile_pic = self.cleaned_data['profile_pic']
+        self.user.profile.save()
+        self.user.save()
+        return self.user

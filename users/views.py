@@ -6,7 +6,7 @@ from django.contrib.auth.views import (
     )
 from django.conf import settings
 from django.urls import reverse_lazy
-from .forms import CustomUserCreationForm, ProfileCreateForm
+from .forms import CustomUserCreationForm, ProfileForm
 from .models import Profile
 from django.contrib.auth import get_user
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -62,32 +62,29 @@ class CustomPasswordResetCompleteView(PasswordResetCompleteView):
     template_name = 'users/registration/password_reset_complete.html'
 
 
-class ProfileCreateView(LoginRequiredMixin, generic.TemplateView):
-    model = Profile
-    form_class = ProfileCreateForm
+class ProfileCreateView(LoginRequiredMixin, generic.FormView):
+    form_class = ProfileForm
     template_name = 'users/profile/profile_create.html'
     success_url = reverse_lazy('reminder:reminder_list')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'user': get_user(self.request)})
+        return kwargs
 
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name, self.get_context_data(
-            form=self.form_class(user=get_user(request)), **kwargs))
-
-
-class ProfileEditView(LoginRequiredMixin, generic.UpdateView):
-    form_class = ProfileCreateForm
-    template_name = 'users/profile/profile_create.html'
-    success_url = reverse_lazy('reminder:reminder_list')
-
-    def get_object(self):
+        self.user = get_user(request)
         try:
-            user = get_user(self.request)
-        except AttributeError:
-            raise Http404('Session Expired') 
-        else:
-            return user.profile
+            self.initial={'email': self.user.email,
+                        'first_name': self.user.first_name,
+                        'last_name': self.user.last_name,
+                        'phone_no':self.user.profile.phone_no,
+                        'profile_pic': self.user.profile.profile_pic,
+                        }
+        except Profile.DoesNotExist:
+            Profile(user=self.user).save()
+        return super().get(request, *args, **kwargs)
 
-    def get(self, request):
-        return super().get(self, request)
-
-    def post(self, request, *args, **kwargs):
-        return super().post(request, *args, **kwargs)
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
