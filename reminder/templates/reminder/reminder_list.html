@@ -6,7 +6,11 @@
 
 {% block content %}
 <h2><a href="{% url 'reminder:create_reminder' %}">Create a Reminder</a></h2>
-	<ul>
+
+	{% for message in messages %}
+		<p>{{ message }}</p>	
+	{% endfor %}
+
 	{% for reminder in reminders %}
 		<li>
 			<a href="{{ reminder.get_absolute_url }}">{{ reminder.title|title}}</a> set on  

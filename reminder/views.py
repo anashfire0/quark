@@ -6,6 +6,7 @@ from .models import Reminder
 from .forms import CreateReminderForm, EditReminderForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user
+from django.contrib import messages
 
 # Create your views here.
 
@@ -37,7 +38,9 @@ class CreateReminderView(LoginRequiredMixin, ContextMixin, generic.View):
         if not bound_form.is_valid():
             context = self.get_context_data(**kwargs)
             context.update({'form': bound_form})
+            messages.warning(request, 'Please correct the errors')
             return render(request, self.template_name, context)
+        messages.success(request, 'Reminder successfully set.')
         return redirect(bound_form.save()) 
 
 class  EditReminderView(LoginRequiredMixin, generic.TemplateView):
@@ -63,7 +66,9 @@ class  EditReminderView(LoginRequiredMixin, generic.TemplateView):
         if not bound_form.is_valid():
             context = self.get_context_data(**kwargs)
             context.update({'form': bound_form})
+            messages.warning(request, 'Please correct the errors')
             return render(request, self.template_name, context)
+        messages.success(request, 'Reminder successfully set.')
         return redirect(bound_form.save(slug))
 
 class DeleteReminderView(LoginRequiredMixin, generic.TemplateView):
@@ -78,5 +83,6 @@ class DeleteReminderView(LoginRequiredMixin, generic.TemplateView):
     def post(self, request, slug, *args, **kwargs):
         if request.POST['to_delete']:
             self.model.objects.get(slug__iexact=slug).delete()
+            messages.success(request, 'Reminder successfully deleted.')
             return redirect(self.success_url)
         return redirect(reverse_lazy('reminder:reminder_detail', args=[slug]))
