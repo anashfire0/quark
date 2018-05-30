@@ -1,5 +1,6 @@
 {% extends parent_template|default:"reminder/reminder_base.html" %}
 
+{% load crispy_forms_tags %}
 {% block title %}
 	{{ block.super }} - {{ reminder.title|title }}
 {% endblock title %}

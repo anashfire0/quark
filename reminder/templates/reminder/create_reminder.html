@@ -1,13 +1,16 @@
 {% extends parent_template|default:"reminder/reminder_base.html" %}
-
+{% load crispy_forms_tags %}
 {% block title %}
 	{{ block.super }} - Set Reminder
 {% endblock title %}
 
 {% block content %}
+<div class="container">
 	<form action="" method="post">
 		{% csrf_token %}
-		{{ form.as_p }}
-		<button type="submit">Set The Reminder</button>
+		{{ form|crispy }}
+		<button class="btn btn-primary"  type="submit">Set The Reminder</button>
 	</form>
+</div>
+	
 {% endblock content %}

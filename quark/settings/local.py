@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
+    'crispy_forms',
     'users',
     'reminder',
 ]
@@ -150,3 +151,6 @@ EMAIL_USE_TLS = True
 
 #celery stuff
 CELERY_BROKER_URL = 'amqp://localhost'
+
+#crispy stuff
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

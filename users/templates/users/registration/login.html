@@ -1,5 +1,7 @@
 {% extends parent_template|default:"users/base.html" %}
 
+{% load crispy_forms_tags %}
+
 {% block title %}
 	{{ block.super }} - login
 {% endblock title %}
@@ -10,13 +12,16 @@
 		<p>You are already logged in</p>	
 		{# <a href="{{ request.path }}">go back</a> #}
 	{% else %}
-	<form action="" method="post">
-		{% csrf_token %}
-		{{ form.as_p }}
-		<p id="forgot-password"><a href="{% url 'users:password_reset' %}">Forgot password?</a></p>
-		<input type="hidden" name="next" value="{{ next }}">	
-		<button type="submit">Login</button>
-	</form>
+	<div class="container">
+		<form action="" method="post">
+			{% csrf_token %}
+			{{ form|crispy }}
+			<p id="forgot-password"><a href="{% url 'users:password_reset' %}">Forgot password?</a></p>
+			<input type="hidden" name="next" value="{{ next }}">	
+			<button class="btn btn-primary" type="submit">Login</button>
+		</form>	
+	</div>
+	
 	{% endif %}
 	{{ red }}
 {% endblock content %}

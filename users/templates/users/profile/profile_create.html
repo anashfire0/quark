@@ -1,15 +1,21 @@
 {% extends 'users/base.html' %}
+{% load crispy_forms_tags %}
 {% block title %}
 	{{ block.super }} - Create Profile
 {% endblock title %}
 
 {% block content %}
+<div class="container">
 	<form action="" method="post" enctype="multipart/form-data">
 		{% csrf_token %}
-		{{ form.as_p }}
-		<button type="submit">save</button>
-	</form>	
+		{{ form|crispy }}
+			<button class="btn btn-primary">
+					<a style="color:#ffa;" href="{% url 'users:password_change' %}">Change password</a>
+		</button>
+		<button class="btn btn-primary"  type="submit">save</button>
+		</form>	
 	{% for message in messages %}
 		<p>{{ message }}</p>
 	{% endfor %}
+</div>
 {% endblock content %}
