@@ -6,7 +6,32 @@ from django.utils import timezone
 # Create your models here.
 
 
+    #custom model manager
+class ReminderManager(models.Manager):
+
+    def recent_list(self):
+        from django.db import connection
+        with connection.cursor() as cursor:
+            cursor.execute('''
+                select user_id, title, text, created_on, timed_on, reminded_count, abs(extract(epoch from (current_timestamp)) - extract(epoch from (timed_on))) as recent
+                    from reminder_reminder as rems
+                    right join users_customuser as users
+                    on rems.user_id=users.id
+                    order by recent, timed_on;
+                ''')
+            result_list=[]
+            for row in cursor.fetchall():
+                p = self.model(user=CustomUser.objects.get(id=row[0]),title=row[1], text=row[2], created_on=row[3],
+                    timed_on=row[4], reminded_count=row[5])
+                p.recent = row[6]
+                result_list.append(p)
+        return result_list
+
 class Reminder(models.Model):
+
+    #custom model manager
+    objects = ReminderManager()
+
     class Meta:
         ordering = ['timed_on']
     user = models.ForeignKey(
@@ -35,3 +60,4 @@ class Reminder(models.Model):
 
     def is_expired(self):
         return self.timed_on < timezone.now() 
+

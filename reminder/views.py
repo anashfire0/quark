@@ -91,9 +91,19 @@ class EditReminderView(LoginRequiredMixin, generic.TemplateView):
             messages.warning(request, 'Please correct the errors')
             return render(request, self.template_name, context)
 
+        reminder = bound_form.save(slug, commit=True)
+        self.set_email_reminder(reminder)
         messages.success(request, 'Reminder successfully set.')
-        obj = bound_form.save(slug, commit=True)
-        return redirect(reverse_lazy('reminder:edit_reminder', args=[obj.slug]))
+        return redirect(reverse_lazy('reminder:edit_reminder', args=[reminder.slug]))
+
+    def set_email_reminder(self, reminder):
+        subject = reminder.title
+        body = reminder.text
+        sender = 'Reminder@quark.com'
+        receiver = reminder.user.email
+        slug = reminder.slug
+        email_reminder.apply_async(
+            (subject, body, sender, receiver, slug), eta=reminder.timed_on.astimezone())
 
 
 class DeleteReminderView(LoginRequiredMixin, generic.TemplateView):
