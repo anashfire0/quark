@@ -44,6 +44,7 @@ class CustomPasswordChangeView(PasswordChangeView):
     template_name = 'users/registration/password_change.html'
     success_url = reverse_lazy('users:password_change_complete')
 
+
 class CustomPasswordResetView(PasswordResetView):
     template_name = 'users/registration/password_reset_form.html'
     email_template_name = 'users/registration/password_reset_email.html'
@@ -53,6 +54,9 @@ class CustomPasswordResetView(PasswordResetView):
 
 class CustomPasswordResetDoneView(PasswordResetDoneView):
     template_name = 'users/registration/password_reset_done.html'
+
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):

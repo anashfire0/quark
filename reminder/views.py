@@ -7,6 +7,9 @@ from .forms import CreateReminderForm, EditReminderForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user
 from django.contrib import messages
+from django.core.mail import send_mail
+
+from .tasks import raka
 
 # Create your views here.
 
@@ -15,6 +18,7 @@ class ReminderListView(LoginRequiredMixin, generic.ListView):
     context_object_name = 'reminders'
 
     def get(self, request, *args, **kwargs):
+        raka.apply_async(('Kan hai re raka',), countdown=4)
         self.queryset = get_user(request).reminders.all()
         return super().get(request, *args, **kwargs)
 
@@ -41,7 +45,8 @@ class CreateReminderView(LoginRequiredMixin, ContextMixin, generic.View):
             messages.warning(request, 'Please correct the errors')
             return render(request, self.template_name, context)
         messages.success(request, 'Reminder successfully set.')
-        return redirect(bound_form.save()) 
+        obj = bound_form.save()
+        return redirect(reverse_lazy('reminder:edit_reminder', args=[obj.slug,]))
 
 class  EditReminderView(LoginRequiredMixin, generic.TemplateView):
     template_name = 'reminder/reminder_update.html'
@@ -69,7 +74,8 @@ class  EditReminderView(LoginRequiredMixin, generic.TemplateView):
             messages.warning(request, 'Please correct the errors')
             return render(request, self.template_name, context)
         messages.success(request, 'Reminder successfully set.')
-        return redirect(bound_form.save(slug))
+        obj = bound_form.save(slug, commit=True)
+        return redirect(reverse_lazy('reminder:edit_reminder', args=[obj.slug]))
 
 class DeleteReminderView(LoginRequiredMixin, generic.TemplateView):
     template_name = 'reminder/reminder_delete.html'

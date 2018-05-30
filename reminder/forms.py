@@ -45,7 +45,7 @@ class CreateReminderForm(
         obj = Reminder(**reminder_entry)
         if commit:
             obj.save()
-            return reverse_lazy('reminder:edit_reminder', args=[obj.slug])
+            return obj
         else:
             return obj
 
@@ -66,6 +66,6 @@ class EditReminderForm(
         obj.timed_on = self.cleaned_data['timed_on']
         if commit:
             obj.save()
-            return reverse_lazy('reminder:edit_reminder', args=[obj.slug])
+            return obj
         else:
             return obj
