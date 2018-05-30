@@ -11,17 +11,32 @@
 		<p>{{ message }}</p>	
 	{% endfor %}
 
+	<ul>
 	{% for reminder in reminders %}
-		<li>
-			<a href="{{ reminder.get_absolute_url }}">{{ reminder.title|title}}</a> set on  
-			{# {{ reminder.timed_on |date:'h:i d-b, y'}} #}
-			{{ reminder.timed_on |date:'h:i a, jS b, Y'}}
-			<a href="{{ reminder.get_update_url }}"> Edit Reminder</a>
-			<a href="{{ reminder.get_delete_url }}">Delete Reminder</a>	
-			<span> created by {{ reminder.user.username }}</span>
-		</li>	
-				{% empty %}
+	{% if not reminder.is_expired %}
+			<li>
+				<a href="{{ reminder.get_absolute_url }}">{{ reminder.title|title}}</a> set on  
+				{# {{ reminder.timed_on |date:'h:i d-b, y'}} #}
+				{{ reminder.timed_on |date:'h:i a, jS b, Y'}}
+				<a href="{{ reminder.get_update_url }}"> Edit Reminder</a>
+				<a href="{{ reminder.get_delete_url }}">Delete Reminder</a>	
+				<span> created by {{ reminder.user.username }}</span>
+				<i style="color:orange;" class="fas fa-envelope"></i>
+			</li>	
+	{% else %}
+			<li>
+				<a href="{{ reminder.get_absolute_url }}">{{ reminder.title|title}}</a> set on  
+				{# {{ reminder.timed_on |date:'h:i d-b, y'}} #}
+				{{ reminder.timed_on |date:'h:i a, jS b, Y'}}
+				<a href="{{ reminder.get_update_url }}"> Edit Reminder</a>
+				<a href="{{ reminder.get_delete_url }}">Delete Reminder</a>	
+				<span> created by {{ reminder.user.username }}</span>
+				<i style="color:green;" class="fas fa-envelope-open"></i>
+			</li>	
+	{% endif %}
+	{% empty %}	
 			<li>Create Reminders and get notified.</li>			
 	{% endfor %}
-	</ul>
+		</ul>	
+	
 {% endblock content %}

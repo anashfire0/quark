@@ -1,6 +1,7 @@
 from django.db import models
 from users.models import CustomUser
 from django.urls import reverse
+from django.utils import timezone
 
 # Create your models here.
 
@@ -31,3 +32,6 @@ class Reminder(models.Model):
 
     def get_delete_url(self):
         return reverse('reminder:delete_reminder', args=[self.slug])
+
+    def is_expired(self):
+        return self.timed_on < timezone.now() 
