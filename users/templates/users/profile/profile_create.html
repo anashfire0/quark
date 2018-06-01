@@ -9,11 +9,11 @@
 	<form action="" method="post" enctype="multipart/form-data">
 		{% csrf_token %}
 		{{ form|crispy }}
-			<button class="btn btn-primary">
-					<a style="color:#ffa;" href="{% url 'users:password_change' %}">Change password</a>
-		</button>
 		<button class="btn btn-primary"  type="submit">save</button>
 		</form>	
+			<button style="display:inline" class="btn btn-primary">
+					<a style="color:#ffa;" href="{% url 'users:password_change' %}">Change password</a>
+		</button>
 	{% for message in messages %}
 		<p>{{ message }}</p>
 	{% endfor %}

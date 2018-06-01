@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import CustomUser, Profile
+from django.core.exceptions import ValidationError
 from PIL import Image
 
 
@@ -12,6 +13,13 @@ class CustomUserCreationForm(UserCreationForm):
 
     def clean_username(self):
         return self.cleaned_data['username'].lower()
+
+    def clean_email(self):
+        try: 
+            self.Meta.model.objects.get(email__iexact=self.cleaned_data['email'])
+            raise ValidationError('The email is already registered')
+        except self.Meta.model.DoesNotExist:
+            return self.cleaned_data['email']
 
 
 class CustomUserChangeForm(UserChangeForm):

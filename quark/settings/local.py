@@ -152,5 +152,5 @@ EMAIL_USE_TLS = True
 #celery stuff
 CELERY_BROKER_URL = 'amqp://localhost'
 
-#crispy stuff
+#django crispy forms
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

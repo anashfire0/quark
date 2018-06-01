@@ -4,6 +4,7 @@ from datetime import datetime
 from .models import Reminder
 from django.urls import reverse_lazy
 from .utils import DateCleanMixin, SlugDateTimeCleanMixin
+from django.core.exceptions import ValidationError
 
 
 class DateInput(forms.DateInput):
