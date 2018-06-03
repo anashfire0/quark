@@ -21,6 +21,8 @@ class ReminderManager(models.Manager):
                 ''')
             result_list=[]
             for row in cursor.fetchall():
+                if None in row:
+                    continue
                 p = self.model(user=CustomUser.objects.get(id=row[0]),title=row[1], text=row[2], created_on=row[3],
                     timed_on=row[4], reminded_count=row[5])
                 p.recent = row[6]
