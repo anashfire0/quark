@@ -12,6 +12,9 @@ from django.contrib.auth import get_user
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 
+from rest_framework import generics
+from .serializers import ProfileSerializer
+
 # Create your views here.
 
 
@@ -94,3 +97,12 @@ class ProfileView(LoginRequiredMixin, SuccessMessageMixin, generic.FormView):
     def form_valid(self, form):
         form.save()
         return super().form_valid(form)
+
+
+class ProfileListRest(generics.ListCreateAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+
+class ProfileDetailRest(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer

@@ -11,6 +11,10 @@ from django.core.mail import send_mail
 
 from .tasks import raka, email_reminder
 
+from .serializers import ReminderSerializer
+
+from rest_framework import generics
+
 # Create your views here.
 
 
@@ -121,3 +125,13 @@ class DeleteReminderView(LoginRequiredMixin, generic.TemplateView):
             messages.success(request, 'Reminder successfully deleted.')
             return redirect(self.success_url)
         return redirect(reverse_lazy('reminder:reminder_detail', args=[slug]))
+
+
+class ReminderListRest(generics.ListCreateAPIView):
+    queryset = Reminder.objects.all()
+    serializer_class = ReminderSerializer
+
+class ReminderDetailRest(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Reminder.objects.all()
+    serializer_class = ReminderSerializer
+
