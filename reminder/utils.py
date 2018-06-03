@@ -25,6 +25,8 @@ class SlugDateTimeCleanMixin:
         return self.cleaned_data
 
     def slug_more(self, slug):
+        if slug in ('create', 'delete', 'update', 'edit', 'api', 'profile'):
+            slug += '-1'
         suffix = 1
         if self.user.reminders.filter(slug=slug).exists():
             while(True):
