@@ -1,7 +1,9 @@
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.utils.text import slugify
-from datetime import datetime
+from datetime import datetime, timedelta
+from rest_framework.exceptions import ValidationError as RestValidationError
+from .models import Reminder
 
 class DateCleanMixin:
 
@@ -33,6 +35,32 @@ class SlugDateTimeCleanMixin:
                 test_slug = slug
                 test_slug += '-' + str(suffix)
                 if self.user.reminders.filter(slug=test_slug).exists():
+                    suffix += 1
+                else:
+                    return test_slug
+        return slug
+
+class DateValidateMixin:
+
+    def validate_timed_on(self, value):
+        if value <= timezone.localtime() + timedelta(seconds=5):
+            raise RestValidationError('Set a reminder with an offset of atleast 10 seconds in the future')
+        return value
+
+class SlugValidateMixin:
+    def validate_slug(self, value):
+        value = self.slug_more(slugify('-'.join(value.split(maxsplit=12)[:12])))
+        return value
+
+    def slug_more(self, slug):
+        if slug in ('create', 'delete', 'update', 'edit', 'api', 'profile'):
+            slug += '-1'
+        suffix = 1
+        if Reminder.objects.filter(user_id=self.initial_data['user']).filter(slug=slug).exists():
+            while(True):
+                test_slug = slug
+                test_slug += '-' + str(suffix)
+                if Reminder.objects.filter(user_id=self.initial_data['user']).filter(slug=test_slug).exists():
                     suffix += 1
                 else:
                     return test_slug

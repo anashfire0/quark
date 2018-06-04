@@ -7,13 +7,13 @@ from django.contrib.auth.views import (
 from django.conf import settings
 from django.urls import reverse_lazy
 from .forms import CustomUserCreationForm, ProfileForm
-from .models import Profile
+from .models import Profile, CustomUser
 from django.contrib.auth import get_user
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 
 from rest_framework import generics
-from .serializers import ProfileSerializer
+from .serializers import ProfileSerializer, CustomUserSerializer
 
 # Create your views here.
 
@@ -106,3 +106,7 @@ class ProfileListRest(generics.ListCreateAPIView):
 class ProfileDetailRest(generics.RetrieveUpdateDestroyAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
+
+class CustomUserListRest(generics.ListCreateAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer

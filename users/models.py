@@ -1,7 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager
+from django.core.validators import RegexValidator
 # Create your models here.
 
+class PhoneValidator(RegexValidator):
+    regex = r'^\d{9,15}$'
+    message = 'Invalid phone number'
 
 class CustomUserManager(UserManager):
     pass
@@ -21,6 +25,6 @@ class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='profile')
     profile_pic = models.ImageField('Profile picture',
         upload_to='profile_pic',default='profile_pic/default_user.png', blank=True)
-    phone_no = models.CharField(max_length=17) # validators should be a list
+    phone_no = models.CharField(validators=[RegexValidator(regex = r'^\+?\d{10,12}$', message = 'Invalid phone number')], max_length=17) # validators should be a list
     def __str__(self):
         return f'{self.user.get_full_name()} - profile'
