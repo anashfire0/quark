@@ -3,11 +3,12 @@ from .models import Reminder
 from . import utils
 
 
-class ReminderSerializer(utils.SlugValidateMixin,utils.DateValidateMixin, serializers.ModelSerializer):
+class ReminderSerializer(utils.DateValidateMixin, serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user.username')
+
     class Meta:
         model = Reminder
-        fields = '__all__'
+        exclude = ('reminded_count',)
 
     def validate_title(self, value):
         return value.lower()
-

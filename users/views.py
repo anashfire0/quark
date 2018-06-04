@@ -13,7 +13,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 
 from rest_framework import generics
-from .serializers import ProfileSerializer, CustomUserSerializer
+from .serializers import ProfileSerializer, UserSerializer
 
 # Create your views here.
 
@@ -107,6 +107,10 @@ class ProfileDetailRest(generics.RetrieveUpdateDestroyAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
 
-class CustomUserListRest(generics.ListCreateAPIView):
+class UserListRest(generics.ListAPIView):
     queryset = CustomUser.objects.all()
-    serializer_class = CustomUserSerializer
+    serializer_class = UserSerializer
+
+class UserDetailRest(generics.RetrieveAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserSerializer

@@ -44,7 +44,7 @@ class Reminder(models.Model):
     text = models.TextField('Text')
     created_on = models.DateTimeField('Created on', auto_now_add=True)
     timed_on = models.DateTimeField('Timed on')
-    reminded_count = models.PositiveIntegerField('Reminded count')
+    reminded_count = models.PositiveIntegerField('Reminded count', default=0)
 
     def __str__(self):
         trunc_text = slice(30)

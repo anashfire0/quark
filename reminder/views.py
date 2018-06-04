@@ -11,9 +11,11 @@ from django.core.mail import send_mail
 
 from .tasks import raka, email_reminder
 
+from .permissions import IsOwnerOrReadOnly
 from .serializers import ReminderSerializer
 
 from rest_framework import generics
+from rest_framework import permissions
 
 # Create your views here.
 
@@ -126,10 +128,30 @@ class DeleteReminderView(LoginRequiredMixin, generic.TemplateView):
             return redirect(self.success_url)
         return redirect(reverse_lazy('reminder:reminder_detail', args=[slug]))
 
+
 class ReminderListRest(generics.ListCreateAPIView):
     queryset = Reminder.objects.all()
     serializer_class = ReminderSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
 
 class ReminderDetailRest(generics.RetrieveUpdateDestroyAPIView):
     queryset = Reminder.objects.all()
     serializer_class = ReminderSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly)
+
+#Root api endpoint
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
+
+
+@api_view(['GET'])
+def api_root(request, format=None):
+    return Response({
+        'users': reverse('users:user_list_rest', request=request, format=format),
+        'reminder': reverse('reminder:reminder_list_rest', request=request, format=format)
+    })
