@@ -3,8 +3,9 @@ from .models import Reminder
 from . import utils
 
 
-class ReminderSerializer(utils.DateValidateMixin, serializers.ModelSerializer):
+class ReminderSerializer(utils.DateValidateMixin, serializers.HyperlinkedModelSerializer):
     user = serializers.ReadOnlyField(source='user.username')
+    url = serializers.HyperlinkedIdentityField(view_name="reminder:reminder_detail_rest")
 
     class Meta:
         model = Reminder

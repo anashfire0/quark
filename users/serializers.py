@@ -9,10 +9,12 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class UserSerializer(serializers.ModelSerializer):
-    reminders = serializers.PrimaryKeyRelatedField(many=True,
-      queryset=Reminder.objects.all())
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    # reminders = serializers.PrimaryKeyRelatedField(many=True,
+      # queryset=Reminder.objects.all())
 
+    reminders = serializers.HyperlinkedIdentityField(many=True,
+        view_name="reminder:reminder_detail_rest", read_only=True)
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'reminders']
+        fields = ['url', 'id', 'username', 'email', 'first_name', 'last_name', 'reminders']
