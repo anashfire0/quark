@@ -15,14 +15,6 @@ from .serializers import ReminderSerializer
 
 from rest_framework import generics
 
-from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.renderers import JSONRenderer
-from rest_framework.parsers import JSONParser
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status
-
 # Create your views here.
 
 
@@ -134,41 +126,10 @@ class DeleteReminderView(LoginRequiredMixin, generic.TemplateView):
             return redirect(self.success_url)
         return redirect(reverse_lazy('reminder:reminder_detail', args=[slug]))
 
+class ReminderListRest(generics.ListCreateAPIView):
+    queryset = Reminder.objects.all()
+    serializer_class = ReminderSerializer
 
-@api_view(['GET', 'POST'])
-def reminder_list_rest(request, format=None):
-    if request.method == 'GET':
-        serializer = ReminderSerializer(Reminder.objects.all(), many=True)
-        return Response(serializer.data)
-
-    elif request.method == 'POST':
-        serializer = ReminderSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        print('entered post')
-        return Response(serializer.errors, status=400)
-
-
-@api_view(['GET', 'PUT', 'DELETE'])
-def reminder_detail_rest(request, pk, format=None):
-    try:
-        reminder = Reminder.objects.get(pk=pk)
-    except Reminder.DoesNotExist: 
-        return Response(status=404)
-
-    if request.method == 'GET':
-        serializer = ReminderSerializer(reminder)
-        return Response(serializer.data)
-
-    elif request.method == 'PUT':
-        serializer = ReminderSerializer(reminder, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=400)
-
-    elif request.method == 'DELETE':
-        reminder.delete()
-        return Response(status=204)
-
+class ReminderDetailRest(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Reminder.objects.all()
+    serializer_class = ReminderSerializer
