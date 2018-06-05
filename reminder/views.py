@@ -16,6 +16,7 @@ from .serializers import ReminderSerializer
 
 from rest_framework import generics
 from rest_framework import permissions
+from rest_framework import viewsets
 
 # Create your views here.
 
@@ -129,29 +130,7 @@ class DeleteReminderView(LoginRequiredMixin, generic.TemplateView):
         return redirect(reverse_lazy('reminder:reminder_detail', args=[slug]))
 
 
-class ReminderListRest(generics.ListCreateAPIView):
+class ReminderViewSet(viewsets.ModelViewSet):
     queryset = Reminder.objects.all()
     serializer_class = ReminderSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
-
-class ReminderDetailRest(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Reminder.objects.all()
-    serializer_class = ReminderSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly)
-
-#Root api endpoint
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework.reverse import reverse
-
-
-@api_view(['GET'])
-def api_root(request, format=None):
-    return Response({
-        'users': reverse('users:user_list_rest', request=request, format=format),
-        'reminder': reverse('reminder:reminder_list_rest', request=request, format=format)
-    })
+    permissions = (IsOwnerOrReadOnly, permissions.IsAuthenticatedOrReadOnly)

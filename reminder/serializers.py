@@ -5,7 +5,7 @@ from . import utils
 
 class ReminderSerializer(utils.DateValidateMixin, serializers.HyperlinkedModelSerializer):
     user = serializers.ReadOnlyField(source='user.username')
-    url = serializers.HyperlinkedIdentityField(view_name="reminder:reminder_detail_rest")
+    url = serializers.HyperlinkedIdentityField(view_name="reminder-detail")
 
     class Meta:
         model = Reminder

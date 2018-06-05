@@ -14,7 +14,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
       # queryset=Reminder.objects.all())
 
     reminders = serializers.HyperlinkedIdentityField(many=True,
-        view_name="reminder:reminder_detail_rest", read_only=True)
+        view_name="reminder-detail", read_only=True)
     class Meta:
         model = CustomUser
         fields = ['id', 'username', 'email', 'first_name', 'last_name', 'reminders']

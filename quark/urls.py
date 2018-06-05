@@ -17,13 +17,21 @@ from django.contrib import admin
 from django.urls import path, re_path, include
 from django.views.generic import RedirectView
 from users.views import HomeView
-from reminder.views import api_root
+from reminder import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'^$', HomeView.as_view(), name='home'),
     re_path(r'^users/', include('users.urls.users',)),
     re_path(r'^reminders/', include('reminder.urls')),
-    re_path(r'^api/$', api_root),
     re_path(r'^api-auth/', include('rest_framework.urls')),
+]
+#api urls
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register(r'reminders', views.ReminderViewSet)
+
+urlpatterns += [
+    re_path(r'^apis/', include(router.urls))
 ]
