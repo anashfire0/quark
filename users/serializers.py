@@ -3,7 +3,9 @@ from users.models import Profile, CustomUser
 from reminder.models import Reminder
 
 
-class ProfileSerializer(serializers.ModelSerializer):
+class ProfileSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name='profile-detail')
+    user = serializers.ReadOnlyField(source='user.username')
     class Meta:
         model = Profile
         fields = '__all__'

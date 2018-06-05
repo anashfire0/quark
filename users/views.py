@@ -14,6 +14,8 @@ from django.contrib.messages.views import SuccessMessageMixin
 
 from rest_framework import generics
 from rest_framework import viewsets
+from rest_framework import permissions
+from .permissions import IsOwnerOrReadOnly
 from .serializers import ProfileSerializer, UserSerializer
 
 # Create your views here.
@@ -100,11 +102,15 @@ class ProfileView(LoginRequiredMixin, SuccessMessageMixin, generic.FormView):
         return super().form_valid(form)
 
 
-class ProfileListRest(generics.ListCreateAPIView):
-    queryset = Profile.objects.all()
-    serializer_class = ProfileSerializer
+# class ProfileListRest(generics.ListCreateAPIView):
+#     queryset = Profile.objects.all()
+#     serializer_class = ProfileSerializer
 
-class ProfileDetailRest(generics.RetrieveUpdateDestroyAPIView):
+# class ProfileDetailRest(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Profile.objects.all()
+#     serializer_class = ProfileSerializer
+
+class ProfileViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
 
