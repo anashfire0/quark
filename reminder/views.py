@@ -133,4 +133,4 @@ class DeleteReminderView(LoginRequiredMixin, generic.TemplateView):
 class ReminderViewSet(viewsets.ModelViewSet):
     queryset = Reminder.objects.all()
     serializer_class = ReminderSerializer
-    permissions = (IsOwnerOrReadOnly, permissions.IsAuthenticatedOrReadOnly)
+    permissions = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
