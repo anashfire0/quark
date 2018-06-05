@@ -17,4 +17,4 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         view_name="reminder:reminder_detail_rest", read_only=True)
     class Meta:
         model = CustomUser
-        fields = ['url', 'id', 'username', 'email', 'first_name', 'last_name', 'reminders']
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'reminders']

@@ -7,7 +7,7 @@ app_name = 'users'
 urlpatterns = [
     re_path(r'^profile/', include('users.urls.profile')),
     re_path(r'^api/list', views.UserListRest.as_view(), name='user_list_rest'),
-    re_path(r'^api/list/(?P<pk>\d+)/$', views.UserListRest.as_view()),
+    re_path(r'^api/list/(?P<pk>\d+)/$', views.UserListRest.as_view(), name='user_detail_rest'),
     re_path(r'^login/$', views.CustomLoginView.as_view(), name='login'),
     re_path(r'^logout/$', auth_views.LogoutView.as_view(), name='logout'),
     re_path(r'^signup/$', views.SignUpView.as_view(), name='signup'),
