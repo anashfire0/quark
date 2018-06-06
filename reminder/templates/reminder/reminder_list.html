@@ -27,11 +27,12 @@
 		</tbody>
 	</table>
 </div>
-<h2><a href="{% url 'reminder:create_reminder' %}">Create a Reminder</a></h2>
-
+<div class="messages">
 	{% for message in messages %}
 		<p>{{ message }}</p>	
 	{% endfor %}
+</div>
+<h2><a href="{% url 'reminder:create_reminder' %}">Create a Reminder</a></h2>
 
 	<ul>
 	{% for reminder in reminders %}
@@ -56,8 +57,6 @@
 				<i style="color:green;" class="fas fa-envelope-open"></i>
 			</li>	
 	{% endif %}
-	{% empty %}	
-			<li>Create Reminders and get notified.</li>			
 	{% endfor %}
 		</ul>	
 	

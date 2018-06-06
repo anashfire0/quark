@@ -29,6 +29,15 @@ class ReminderListView(LoginRequiredMixin, generic.ListView):
         # raka.apply_async(('Kan hai re raka',), countdown=2)
         sort_by = request.GET.get('sort_by', 'timed_on')
         self.queryset = get_user(request).reminders.order_by(sort_by)
+
+        if request.GET.get('reminder_search', None):
+            self.queryset = get_user(request).reminders.filter(title__icontains=request.GET.get('reminder_search'))
+            if not self.queryset.exists():
+                messages.error(request, 'Not Found')
+                # self.object_list = None #to use get_context_data
+                # self.get_context_data(search_empty=
+                #     'Did not find any title containing' 
+                #     f'{request.GET.get("reminder_search")}.')
         return super().get(request, *args, **kwargs)
 
 
