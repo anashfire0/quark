@@ -1,63 +1,93 @@
-{% extends liarent_temlilate|default:"reminder/reminder_base.html" %}
+{% extends parent_template|default:"reminder/reminder_base.html" %}
 
 {% block title %}
 	{{ block.super }} - Reminders
 {% endblock title %}
 
 {% block content %}
-<div class="sticky-top float-right">
-	<table class="table table-dark table-bordered ">
-		<thead class="thead-dark">
-			<tr>
-				<th>
-				Sort by	
-				</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td><a href="?sort_by=title">Title</a></td>
-			</tr>
-			<tr>
-				<td><a href="?sort_by=created_on">Created on</a></td>
-			</tr>
-			<tr>
-				<td><a href="?sort_by=timed_on">Timed on</a></td>
-			</tr>
-		</tbody>
-	</table>
-</div>
-<div class="messages">
-	{% for message in messages %}
-		<p>{{ message }}</p>	
-	{% endfor %}
-</div>
-<h2><a href="{% url 'reminder:create_reminder' %}">Create a Reminder</a></h2>
-
-	<ul>
-	{% for reminder in reminders %}
-	{% if not reminder.is_expired %}
-			<li>
-				<a href="{{ reminder.get_absolute_url }}">{{ reminder.title|title}}</a> set on  
-				{# {{ reminder.timed_on |date:'h:i d-b, y'}} #}
-				{{ reminder.timed_on |date:'h:i a, jS b, Y'}}
-				<a href="{{ reminder.get_update_url }}"> Edit Reminder</a>
-				<a href="{{ reminder.get_delete_url }}">Delete Reminder</a>	
-				<span> created by {{ reminder.user.username }}</span>
-				<i style="color:orange;" class="fas fa-envelope"></i>
-			</li>	
-	{% else %}
-			<li>
-				<a href="{{ reminder.get_absolute_url }}">{{ reminder.title|title}}</a> set on  
-				{# {{ reminder.timed_on |date:'h:i d-b, y'}} #}
-				{{ reminder.timed_on |date:'h:i a, jS b, Y'}}
-				<a href="{{ reminder.get_update_url }}"> Edit Reminder</a>
-				<a href="{{ reminder.get_delete_url }}">Delete Reminder</a>	
-				<span> created by {{ reminder.user.username }}</span>
-				<i style="color:green;" class="fas fa-envelope-open"></i>
-			</li>	
-	{% endif %}
-	{% endfor %}
-		</ul>	
 	
+	<div class="row">
+		<div class="col-lg">
+			
+		</div>
+		<div class="col-lg-10">
+
+			<div class="container ">
+
+				<div class="messages">
+				{% for message in messages %}
+						<p>{{ message }}</p>	
+				{% endfor %}
+
+				</div>
+
+				<h2><a href="{% url 'reminder:create_reminder' %}">Create a Reminder</a></h2>
+				<div class="container-fluid">
+					{% for reminder in reminders %}
+							<div class="reminder-block d-flex justify-content-start">
+
+								<div class="">
+									{% if reminder.is_expired %}
+										<i style="color:orange;" class="fas fa-envelope"></i>
+										{% else %}
+										<i style="color:green;" class="fas fa-envelope-open"></i>
+									{% endif %}
+								</div>
+
+								<div class="bg-warning ">
+									<a href="{{ reminder.get_absolute_url }}">{{ reminder.title|title}}</a> 
+								</div>
+
+								<div class="bg-success d-flex align-self-baseline">
+											Timed on  
+											{{ reminder.timed_on |date:'h:i a, jS b, Y'}}
+								</div>
+
+								<div class="bg-primary">
+									<a href="{{ reminder.get_update_url }}"> Edit </a> 
+								</div>
+
+								<div class="bg-success">
+									<a href="{{ reminder.get_delete_url }}">Delete </a>	
+								</div>
+
+							</div>	
+<!--
+							<div class="d-flex justify-content-center">
+									<p id="timed_on" class="align-self-baseline">
+										Timed on  
+										{{ reminder.timed_on |date:'h:i a, jS b, Y'}}
+									</p>
+							</div>
+-->							<hr>
+					{% endfor %}
+				</div >		
+
+			</div>
+
+		</div>
+		<div class="col-lg">
+			<table class="table table-dark table-bordered ">
+			<thead class="thead-dark">
+				<tr>
+					<th>
+					Sort by	
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><a href="?sort_by=title">Title</a></td>
+				</tr>
+				<tr>
+					<td><a href="?sort_by=created_on">Created on</a></td>
+				</tr>
+				<tr>
+					<td><a href="?sort_by=timed_on">Timed on</a></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>	
+		</div>
+		
 {% endblock content %}

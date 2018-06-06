@@ -1,0 +1,15 @@
+.practice{
+	background: red;
+}
+
+.flex{
+	display: flex;
+	background: green;
+}
+#outer{
+	background: blue;
+}
+#inner{
+	background: orange;
+	text-align: center;
+}
