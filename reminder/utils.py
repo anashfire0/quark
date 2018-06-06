@@ -53,7 +53,7 @@ class SlugValidateMixin:
         return value
 
     def slug_more(self, slug):
-        if slug in ('create', 'delete', 'update', 'edit', 'api', 'profile'):
+        if slug in ('create', 'delete', 'update', 'edit',):
             slug += '-1'
         suffix = 1
         if Reminder.objects.filter(user_id=self.initial_data['user']).filter(slug=slug).exists():

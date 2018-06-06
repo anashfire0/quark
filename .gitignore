@@ -1,2 +1,4 @@
 quark_uml*
 **/__pycache__/
+*.log
+*.pid

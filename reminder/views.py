@@ -26,7 +26,7 @@ class ReminderListView(LoginRequiredMixin, generic.ListView):
     context_object_name = 'reminders'
 
     def get(self, request, *args, **kwargs):
-        raka.apply_async(('Kan hai re raka',), countdown=2)
+        # raka.apply_async(('Kan hai re raka',), countdown=2)
         self.queryset = get_user(request).reminders.all()
         return super().get(request, *args, **kwargs)
 
@@ -53,7 +53,6 @@ class CreateReminderView(LoginRequiredMixin, ContextMixin, generic.View):
         if not bound_form.is_valid():
             context = self.get_context_data(**kwargs)
             context.update({'form': bound_form})
-            messages.warning(request, 'Please correct the errors')
             return render(request, self.template_name, context)
         reminder = bound_form.save()
         self.set_email_reminder(reminder)
@@ -100,7 +99,7 @@ class EditReminderView(LoginRequiredMixin, generic.TemplateView):
 
         reminder = bound_form.save(slug, commit=True)
         self.set_email_reminder(reminder)
-        messages.success(request, 'Reminder successfully set.')
+        messages.success(request, 'Reminder successfully edited.')
         return redirect(reverse_lazy('reminder:edit_reminder', args=[reminder.slug]))
 
     def set_email_reminder(self, reminder):

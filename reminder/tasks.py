@@ -14,8 +14,9 @@ def emailer():
 
 @shared_task
 def email_reminder(subject, body, sender, receiver, slug):
+    try:
+        Reminder.objects.get(slug__iexact=slug)
+    except Reminder.DoesNotExist:
+        return 'The reminder was edited/deleted.'
     send_mail(subject, body, sender, [receiver])
-    reminder = Reminder.objects.get(slug__iexact=slug)
-    reminder.reminded_count += 1
-    reminder.save()
     return f'{receiver} recieved the email.'
