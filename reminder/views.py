@@ -27,15 +27,18 @@ class ReminderListView(LoginRequiredMixin, generic.ListView):
 
     def get(self, request, *args, **kwargs):
         # raka.apply_async(('Kan hai re raka',), countdown=2)
-        self.queryset = get_user(request).reminders.all()
+        sort_by = request.GET.get('sort_by', 'timed_on')
+        self.queryset = get_user(request).reminders.order_by(sort_by)
         return super().get(request, *args, **kwargs)
 
 
 class ReminderDetailView(LoginRequiredMixin, generic.DetailView):
-    model = Reminder
     template_name = 'reminder/reminder_detail.html'
     context_object_name = 'reminder'
 
+    def get(self, request, slug, *args, **kwargs):
+        self.queryset = get_user(request).reminders.all()
+        return super().get(request, slug, *args, **kwargs)
 
 class CreateReminderView(LoginRequiredMixin, ContextMixin, generic.View):
     template_name = 'reminder/create_reminder.html'
@@ -76,7 +79,7 @@ class EditReminderView(LoginRequiredMixin, generic.TemplateView):
 
     def get(self, request, slug, *args, **kwargs):
         user = get_user(request)
-        obj = self.model.objects.get(slug=slug)
+        obj = user.reminders.get(slug=slug)
         initial = {'user': obj.user,
                    'title': obj.title,
                    'text': obj.text,
@@ -118,12 +121,12 @@ class DeleteReminderView(LoginRequiredMixin, generic.TemplateView):
     success_url = reverse_lazy('reminder:reminder_list')
 
     def get(self, request, slug, *args, **kwargs):
-        obj = get_object_or_404(self.model, slug__iexact=slug)
+        obj = get_user(request).reminders.get(slug__iexact=slug)
         return render(request, self.template_name, self.get_context_data(reminder=obj, **kwargs))
 
     def post(self, request, slug, *args, **kwargs):
         if request.POST['to_delete']:
-            self.model.objects.get(slug__iexact=slug).delete()
+            get_user(request).reminders.get(slug__iexact=slug).delete()
             messages.success(request, 'Reminder successfully deleted.')
             return redirect(self.success_url)
         return redirect(reverse_lazy('reminder:reminder_detail', args=[slug]))
