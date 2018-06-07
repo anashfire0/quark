@@ -9,11 +9,31 @@ from django.utils import timezone
     #custom model manager
 class ReminderManager(models.Manager):
 
-    def recent_list(self):
+    def recently_timed(self):
         from django.db import connection
         with connection.cursor() as cursor:
             cursor.execute('''
                 select user_id, title, slug, text, created_on, timed_on, reminded_count, abs(extract(epoch from (current_timestamp)) - extract(epoch from (timed_on))) as recent
+                    from reminder_reminder as rems
+                    right join users_customuser as users
+                    on rems.user_id=users.id
+                    order by recent, timed_on;
+                ''')
+            result_list=[]
+            for row in cursor.fetchall():
+                if None in row:
+                    continue
+                p = self.model(user=CustomUser.objects.get(id=row[0]),title=row[1],slug=row[2], text=row[3], created_on=row[4],
+                    timed_on=row[5], reminded_count=row[6])
+                p.recent = row[7]
+                result_list.append(p)
+        return result_list
+
+    def recently_created(self):
+        from django.db import connection
+        with connection.cursor() as cursor:
+            cursor.execute('''
+                select user_id, title, slug, text, created_on, timed_on, reminded_count, abs(extract(epoch from (current_timestamp)) - extract(epoch from (created_on))) as recent
                     from reminder_reminder as rems
                     right join users_customuser as users
                     on rems.user_id=users.id

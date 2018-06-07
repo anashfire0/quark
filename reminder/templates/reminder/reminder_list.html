@@ -10,9 +10,10 @@
 		<div class="col-lg">
 			
 		</div>
-		<div class="col-lg-10">
+		<div class="col-lg-10 bg-success">
+			<h2 class="text-center"><a href="{% url 'reminder:create_reminder' %}">Create a Reminder</a></h2>
 
-			<div class="container ">
+			<div class="container">
 
 				<div class="messages">
 				{% for message in messages %}
@@ -21,12 +22,13 @@
 
 				</div>
 
-				<h2><a href="{% url 'reminder:create_reminder' %}">Create a Reminder</a></h2>
+
 				<div class="container-fluid">
 					{% for reminder in reminders %}
-							<div class="reminder-block d-flex justify-content-start">
+						<div class="d-flex justify-content-between">	
 
-								<div class="">
+							<div class="reminder-block d-inline-flex justify-content-start">
+								<div class="p-2">
 									{% if reminder.is_expired %}
 										<i style="color:orange;" class="fas fa-envelope"></i>
 										{% else %}
@@ -34,32 +36,42 @@
 									{% endif %}
 								</div>
 
-								<div class="bg-warning ">
+								<div class="p-2">
 									<a href="{{ reminder.get_absolute_url }}">{{ reminder.title|title}}</a> 
 								</div>
 
-								<div class="bg-success d-flex align-self-baseline">
-											Timed on  
-											{{ reminder.timed_on |date:'h:i a, jS b, Y'}}
-								</div>
-
-								<div class="bg-primary">
-									<a href="{{ reminder.get_update_url }}"> Edit </a> 
-								</div>
-
-								<div class="bg-success">
-									<a href="{{ reminder.get_delete_url }}">Delete </a>	
-								</div>
-
 							</div>	
-<!--
-							<div class="d-flex justify-content-center">
-									<p id="timed_on" class="align-self-baseline">
-										Timed on  
-										{{ reminder.timed_on |date:'h:i a, jS b, Y'}}
-									</p>
+
+							<div class="reminder-block d-inline-flex justify-content-end">
+								<div class="p-2">
+									<a href="{{ reminder.get_update_url }}">
+										<button class="btn btn-primary">
+											Edit
+										</button> 
+									 </a> 
+								</div>
+
+								<div class="p-2">
+									<a href="{{ reminder.get_delete_url }}"> 	
+										<button class="btn btn-primary">
+											Delete
+										</button> 
+									</a>
+								</div>
 							</div>
--->							<hr>
+						</div>
+						<div style="height:40px;" class="d-flex justify-content-center">
+								<p class="p-2 ">
+											Created:
+											{{ reminder.created_on |date:'h:i a, jS b, Y'}}
+								</p>
+								<p class="p-2">|</p>
+								<p class="p-2">
+											Timed:   
+											{{ reminder.timed_on |date:'h:i a, jS b, Y'}}
+								</p>
+						</div>
+						<hr>
 					{% endfor %}
 				</div >		
 
@@ -85,6 +97,14 @@
 				<tr>
 					<td><a href="?sort_by=timed_on">Timed on</a></td>
 				</tr>
+				<tr>
+					<td><a href="?sort_by=recently-timed">Recently timed</a></td>
+				</tr>
+				<tr>
+					<td><a href="?sort_by=recently-created">Recent created</a></td>
+				</tr>
+			</tbody>
+			</tbody>
 			</tbody>
 		</table>
 	</div>	

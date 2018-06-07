@@ -27,9 +27,25 @@ class ReminderListView(LoginRequiredMixin, generic.ListView):
 
     def get(self, request, *args, **kwargs):
         # raka.apply_async(('Kan hai re raka',), countdown=2)
-        sort_by = request.GET.get('sort_by', 'timed_on')
-        self.queryset = get_user(request).reminders.order_by(sort_by)
 
+        #implementing sorting
+        sort_by = request.GET.get('sort_by', 'timed_on').lower()
+        if sort_by == 'recently-timed': 
+            self.queryset = [x 
+                            for x in 
+                            Reminder.objects.recently_timed() 
+                            if x.user_id == get_user(request).id
+            ]
+        elif sort_by == 'recently-created':
+            self.queryset = [x 
+                            for x in 
+                            Reminder.objects.recently_created() 
+                            if x.user_id == get_user(request).id
+            ]
+        else:
+            self.queryset = get_user(request).reminders.order_by(sort_by)
+
+        #implementing searching
         if request.GET.get('reminder_search', None):
             self.queryset = get_user(request).reminders.filter(title__icontains=request.GET.get('reminder_search'))
             if not self.queryset.exists():
