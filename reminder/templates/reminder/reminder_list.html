@@ -27,7 +27,6 @@
 
 	<h2 class="text-center"><a href="{% url 'reminder:create_reminder' %}">Create a Reminder</a></h2>
 
-
 		<div class="container-fluid">
 			{% for reminder in reminders %}
 				<div class="d-flex justify-content-between">	
@@ -60,11 +59,11 @@
 							<a class="btn btn-primary" href="{{ reminder.get_delete_url }}">
 								 	Delete
 							</a>
-					</div>
+						</div>
 					</div>
 				</div>
 
-				<div style="height:40px;" class="d-flex justify-content-center">
+				<div style="height:30px;" class="d-flex justify-content-center">
 					<p class="p-2 ">
 						Created: {{ reminder.created_on |date:'h:i a, jS b, Y'}}
 					</p>
@@ -98,5 +97,4 @@
 				{% endif %}
 			</div>
 		</div >		
-		
 {% endblock content %}
