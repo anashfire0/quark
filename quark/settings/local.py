@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
+    'rest_framework',
+    'crispy_forms',
     'users',
     'reminder',
 ]
@@ -147,3 +149,26 @@ EMAIL_HOST_USER = os.environ.get('SENDGRID_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_PASS')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+
+#celery stuff
+CELERY_BROKER_URL = 'amqp://localhost'
+
+#django crispy forms
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+#DRF settings
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
+}
+
+#boot-strap messages
+from django.contrib.messages import constants as messages
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'alert-info',
+    messages.INFO: 'alert-info',
+    messages.SUCCESS: 'alert-success',
+    messages.WARNING: 'alert-warning',
+    messages.ERROR: 'alert-danger',
+}

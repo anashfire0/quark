@@ -1,7 +1,16 @@
 <!DOCTYPE html>
+{% load  static %}
 <html lang="en">
 <head>
+
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" href="{% static 'bootstrap/bootstrap.min.css' %}">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+	<link rel="shortcut icon" type="image/png" href="{% static 'python.png' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'base/css/base.css' %}">
+
 	<title>
 			{% block title %}
 				Quark 
@@ -9,20 +18,72 @@
 	</title>
 </head>
 <body>
-	<ul>
-		<li><a href="{% url 'home' %}">home</a></li>
-		{% if user.is_authenticated %}
-			<li>	Hi, {{ user.username }}</li>
-			<li><a href="{% url 'users:profile_edit' %}">profile</a></li>
-			<li><a href="{% url 'reminder:reminder_list' %}">reminders</a></li>
-			<li><a href="{% url 'users:logout' %}">logout</a></li>
-			<li><a href="{% url 'users:password_change' %}">Change password</a></li>
-		{% else %}
-			<li><a href="{% url 'users:login' %}?next={{ request.path }}">login</a></li>
-			<li><a href="{% url 'users:signup' %}">Sign Up</a></li>
-		{% endif %}
-	</ul>
-	{% block content %}
-	{% endblock content %}
+	<header>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		  <a class="navbar-brand" href="{% url 'home' %}">Quark</a>
+		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+		    <span class="navbar-toggler-icon"></span>
+		  </button>
+		  <div class="collapse navbar-collapse" id="#navbarSupportedContent">
+		    <ul class="navbar-nav mr-auto">
+	    		{% if user.is_authenticated %}
+						<li class="nav-item">	
+							<span class="nav-link">
+								hi, {{ user.username }}
+							</span>	
+					  </li>
+				  {% endif %}
+		      <li class="nav-item">
+		        <a class="nav-link" href="{% url 'home' %}">home </a>
+		      </li>
+	    		{% if user.is_authenticated %}
+						<li class="nav-item">
+								<a class="nav-link" href="{% url 'users:profile_edit' %}">profile</a>
+						</li>
+						<li class="nav-item">
+								<a class="nav-link" href="{% url 'reminder:reminder_list' %}">reminders</a>
+						</li>
+						<li class="nav-item">
+								<a class="nav-link" href="{% url 'users:logout' %}">logout</a>
+						</li>
+					{% else %}
+						<li class="nav-item">
+							<a class="nav-link" href="{% url 'users:login' %}?next={{ request.path }}">login</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{% url 'users:signup' %}">sign up</a>
+						</li>
+					{% endif %}
+		
+		    </ul>
+		  </div>
+			</nav>	
+	</header>
+	<div class="row">
+		<div class="col-lg">	</div>
+
+		<div class="col-lg-8">
+			{% for message in messages %}
+			  <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+			    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			      <span aria-hidden="true">&times;</span>
+			    </button>
+			    {{ message }}
+			  </div>
+			{% endfor %}
+
+			{% block content %}
+			{% endblock content %}
+		</div>
+
+		<div class="col-lg"></div>	
+	</div>
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="{% static 'base/js/base.js' %}"></script>
+
 </body>
 </html>

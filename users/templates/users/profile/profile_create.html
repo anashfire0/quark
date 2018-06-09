@@ -1,15 +1,27 @@
 {% extends 'users/base.html' %}
+{% load crispy_forms_tags %}
 {% block title %}
 	{{ block.super }} - Create Profile
 {% endblock title %}
 
 {% block content %}
-	<form action="" method="post" enctype="multipart/form-data">
-		{% csrf_token %}
-		{{ form.as_p }}
-		<button type="submit">save</button>
-	</form>	
-	{% for message in messages %}
-		<p>{{ message }}</p>
-	{% endfor %}
+<div class="row">
+		<div class="col-lg"></div>	
+
+		<div class="col-lg-5">
+		<form action="" method="post" enctype="multipart/form-data">
+			{% csrf_token %}
+			{{ form|crispy }}
+			<div class="d-flex justify-content-between">
+				<button class="btn btn-primary"  type="submit">save</button>
+				<a href="{% url 'users:password_change' %}">
+					<button style="display:inline" class="btn btn-primary">
+						Change password
+					</button>
+				</a>				
+			</div>
+		</form>									
+		</div>			
+		<div class="col-lg"></div>	
+</div>
 {% endblock content %}

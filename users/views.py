@@ -3,14 +3,20 @@ from django.views import generic
 from django.contrib.auth.views import (
     LoginView, PasswordChangeView, PasswordResetView, PasswordResetConfirmView,
     PasswordResetDoneView, PasswordResetCompleteView,
-    )
+)
 from django.conf import settings
 from django.urls import reverse_lazy
 from .forms import CustomUserCreationForm, ProfileForm
-from .models import Profile
+from .models import Profile, CustomUser
 from django.contrib.auth import get_user
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
+
+from rest_framework import generics
+from rest_framework import viewsets
+from rest_framework import permissions
+from .permissions import IsOwnerOrReadOnly
+from .serializers import ProfileSerializer, UserSerializer
 
 # Create your views here.
 
@@ -40,9 +46,11 @@ class SignUpView(generic.CreateView):
     template_name = 'users/registration/signup.html'
     success_url = reverse_lazy('users:login')
 
+
 class CustomPasswordChangeView(PasswordChangeView):
     template_name = 'users/registration/password_change.html'
     success_url = reverse_lazy('users:password_change_complete')
+
 
 class CustomPasswordResetView(PasswordResetView):
     template_name = 'users/registration/password_reset_form.html'
@@ -54,10 +62,14 @@ class CustomPasswordResetView(PasswordResetView):
 class CustomPasswordResetDoneView(PasswordResetDoneView):
     template_name = 'users/registration/password_reset_done.html'
 
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     success_url = reverse_lazy('users:password_reset_complete')
     template_name = 'users/registration/password_reset_confirm.html'
+
 
 class CustomPasswordResetCompleteView(PasswordResetCompleteView):
     template_name = 'users/registration/password_reset_complete.html'
@@ -77,12 +89,12 @@ class ProfileView(LoginRequiredMixin, SuccessMessageMixin, generic.FormView):
     def get(self, request, *args, **kwargs):
         self.user = get_user(request)
         try:
-            self.initial={'email': self.user.email,
-                        'first_name': self.user.first_name,
-                        'last_name': self.user.last_name,
-                        'phone_no':self.user.profile.phone_no,
-                        'profile_pic': self.user.profile.profile_pic,
-                        }
+            self.initial = {'email': self.user.email,
+                            'first_name': self.user.first_name,
+                            'last_name': self.user.last_name,
+                            'phone_no': self.user.profile.phone_no,
+                            'profile_pic': self.user.profile.profile_pic,
+                            }
         except Profile.DoesNotExist:
             Profile(user=self.user).save()
         return super().get(request, *args, **kwargs)
@@ -90,3 +102,13 @@ class ProfileView(LoginRequiredMixin, SuccessMessageMixin, generic.FormView):
     def form_valid(self, form):
         form.save()
         return super().form_valid(form)
+
+
+class ProfileViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+
+
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserSerializer

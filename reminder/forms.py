@@ -4,6 +4,7 @@ from datetime import datetime
 from .models import Reminder
 from django.urls import reverse_lazy
 from .utils import DateCleanMixin, SlugDateTimeCleanMixin
+from django.core.exceptions import ValidationError
 
 
 class DateInput(forms.DateInput):
@@ -45,7 +46,7 @@ class CreateReminderForm(
         obj = Reminder(**reminder_entry)
         if commit:
             obj.save()
-            return reverse_lazy('reminder:edit_reminder', args=[obj.slug])
+            return obj
         else:
             return obj
 
@@ -66,6 +67,6 @@ class EditReminderForm(
         obj.timed_on = self.cleaned_data['timed_on']
         if commit:
             obj.save()
-            return reverse_lazy('reminder:edit_reminder', args=[obj.slug])
+            return obj
         else:
             return obj

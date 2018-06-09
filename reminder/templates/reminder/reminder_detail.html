@@ -1,15 +1,23 @@
 {% extends parent_template|default:"reminder/reminder_base.html" %}
 
+{% load crispy_forms_tags %}
 {% block title %}
 	{{ block.super }} - {{ reminder.title|title }}
 {% endblock title %}
 
 {% block content %}
-	<h3><a href="{{ reminder.get_update_url }}">Edit Reminder</a></h3>
-	<h3><a href="{{ reminder.get_delete_url }}">Delete Reminder</a></h3>
-	<ul>
-		<li>{{ reminder.title }}</li>
-		<li>{{ reminder.text }}</li>
-		<li>reminded {{ reminder.reminded_count }} time{{ reminder.reminded_count|pluralize }}</li>
-	</ul>
+	<div class="d-flex mt-4 justify-content-around">	
+		<h3><a class="text-dark	" href="{{ reminder.get_update_url }}">Edit Reminder</a></h3>
+		<h3><a class="text-dark	" href="{{ reminder.get_delete_url }}">Delete Reminder</a></h3>
+	</div>
+	<hr class="my-4">
+		<div class="d-flex justify-content-center">
+			<ul class="list-group">
+				<li class="list-group-item">{{ reminder.title }}</li>
+				<li class="list-group-item">{{ reminder.text }}</li>
+				<li class="list-group-item">{{ reminder.created_on }}</li>
+				<li class="list-group-item">{{ reminder.timed_on }}</li>
+				<li class="list-group-item">reminded {{ reminder.reminded_count }} time{{ reminder.reminded_count|pluralize }}</li>
+			</ul>
+	</div>
 {% endblock content %}

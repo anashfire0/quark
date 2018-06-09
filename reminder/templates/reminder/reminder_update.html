@@ -1,15 +1,24 @@
 {% extends parent_template|default:"reminder/reminder_base.html" %}
+{% load crispy_forms_tags %}
 {% block title %}
 	{{ block.super }} - Update Reminder
 {% endblock title %}
 
 {% block content %}
-	<form action="" method="post">
-		{% csrf_token %}
-		{{ form.as_p }}
-		<button type="submit">Edit Reminder</button>
-	</form>
-	{% for message in messages %}
-		<p>{{ message }}</p>	
-	{% endfor %}
+<div class="row">
+		<div class="col-lg"></div>	
+
+		<div class="col-lg-6">
+			<form action="" method="post">
+				{% csrf_token %}
+				{{ form|crispy}}
+				<div class="text-center">
+					<button class="btn btn-primary" type="submit">Edit Reminder</button>
+				</div>
+			</form>
+		</div>			
+
+		<div class="col-lg"></div>	
+</div>
+
 {% endblock content %}
