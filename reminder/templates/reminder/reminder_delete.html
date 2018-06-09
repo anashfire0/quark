@@ -8,8 +8,8 @@
 	<p>Are you sure you want to delete {{ reminder.title }}?</p>
 		<form action="" method="post">
 			{% csrf_token %}
-			<button name="to_delete" value="yes" type="submit">Yes</button>
-			<button name="to_delete" type="submit">No</button>
+			<button class="btn btn-danger" name="to_delete" value="yes" type="submit">Yes</button>
+			<button class="btn btn-secondary" name="to_delete" type="submit">No</button>
 		</form>	
 </div>
 

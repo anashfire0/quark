@@ -5,109 +5,98 @@
 {% endblock title %}
 
 {% block content %}
-	
-	<div class="row">
-		<div class="col-lg">
-			
-		</div>
-		<div class="col-lg-10 bg-success">
-			<h2 class="text-center"><a href="{% url 'reminder:create_reminder' %}">Create a Reminder</a></h2>
 
-			<div class="container">
+	<div class="d-flex justify-content-between p-2 ">
+		<div class="dropdown align-self-center">
+      <a class="btn btn-secondary dropdown-toggle" href="#"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	          Sort by
+      </a>
+      <div class="text-left p-2 bg-secondary dropdown-menu" >
+				<a class=""  href="?sort_by=title">Title</a><br>
+				<a class=""  href="?sort_by=created_on">Created on</a><br>
+				<a class=""  href="?sort_by=timed_on">Timed on</a><br>
+				<a class=""  href="?sort_by=recently-timed">Recently timed</a><br>
+				<a class=""  href="?sort_by=recently-created">Recent created</a>
+      </div>
+    </div>
+		<form class="form-inline my-2 my-lg-0 ">
+					    <input name="reminder_search" class="form-control mr-sm-2" type="search" placeholder="search" aria-label="Search">
+				      <input class="invisible" value="" type="submit">
+    </form>			
+	</div>
 
-				<div class="messages">
-				{% for message in messages %}
-						<p>{{ message }}</p>	
-				{% endfor %}
+	<h2 class="text-center"><a href="{% url 'reminder:create_reminder' %}">Create a Reminder</a></h2>
 
+
+		<div class="container-fluid">
+			{% for reminder in reminders %}
+				<div class="d-flex justify-content-between">	
+
+					<div class="reminder-block d-inline-flex justify-content-start">
+						<div class="p-2">
+							{% if reminder.is_expired %}
+										<i style="color:green;" class="fas fa-envelope-open"></i>
+							{% else %}
+										<i style="color:orange;" class="fas fa-envelope"></i>
+							{% endif %}
+						</div>
+
+						<div class="p-2">
+							<a href="{{ reminder.get_absolute_url }}">{{ reminder.title|title|truncatewords:14}}</a> 
+						</div>
+
+					</div>	
+
+					<div class="reminder-block d-inline-flex justify-content-end">
+						<div class="p-2">
+							<a href="{{ reminder.get_update_url }}">
+								<button class="btn btn-primary">
+									Edit
+								</button> 
+						 </a> 
+						</div>
+
+						<div class="p-2">
+							<a class="btn btn-primary" href="{{ reminder.get_delete_url }}">
+								 	Delete
+							</a>
+					</div>
+					</div>
 				</div>
 
+				<div style="height:40px;" class="d-flex justify-content-center">
+					<p class="p-2 ">
+						Created: {{ reminder.created_on |date:'h:i a, jS b, Y'}}
+					</p>
+					<p class="p-2">|</p>
+					<p class="p-2">
+						Timed: {{ reminder.timed_on |date:'h:i a, jS b, Y'}}
+					</p>
+				</div>
 
-				<div class="container-fluid">
-					{% for reminder in reminders %}
-						<div class="d-flex justify-content-between">	
+				<hr>
+			{% endfor %}
+			<div class="d-flex justify-content-center">
+				{% if is_paginated %}
 
-							<div class="reminder-block d-inline-flex justify-content-start">
-								<div class="p-2">
-									{% if reminder.is_expired %}
-										<i style="color:orange;" class="fas fa-envelope"></i>
-										{% else %}
-										<i style="color:green;" class="fas fa-envelope-open"></i>
-									{% endif %}
-								</div>
+					<ul class="pagination">
+						{% if page_obj.has_previous %}
+							<li class="page-item"><a href="?page={{ page_obj.previous_page_number }}" class="page-link">&laquo;</a></li>
+						{% endif %}
+						{% for i in paginator.page_range %}
+							{% if page_obj.number == i %}
+								<li class="page-item active"><span class="page-link">{{ i }}</span></li>	
+							{% else %}
+								<li class="page-item"><a href="?page={{ i }}" class="page-link">{{ i }}</a></li>
+							{% endif %}
+						{% endfor %}
+						{% if page_obj.has_next %}
+							<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+						{% endif %}
+					</ul>
 
-								<div class="p-2">
-									<a href="{{ reminder.get_absolute_url }}">{{ reminder.title|title}}</a> 
-								</div>
-
-							</div>	
-
-							<div class="reminder-block d-inline-flex justify-content-end">
-								<div class="p-2">
-									<a href="{{ reminder.get_update_url }}">
-										<button class="btn btn-primary">
-											Edit
-										</button> 
-									 </a> 
-								</div>
-
-								<div class="p-2">
-									<a href="{{ reminder.get_delete_url }}"> 	
-										<button class="btn btn-primary">
-											Delete
-										</button> 
-									</a>
-								</div>
-							</div>
-						</div>
-						<div style="height:40px;" class="d-flex justify-content-center">
-								<p class="p-2 ">
-											Created:
-											{{ reminder.created_on |date:'h:i a, jS b, Y'}}
-								</p>
-								<p class="p-2">|</p>
-								<p class="p-2">
-											Timed:   
-											{{ reminder.timed_on |date:'h:i a, jS b, Y'}}
-								</p>
-						</div>
-						<hr>
-					{% endfor %}
-				</div >		
-
+				{% endif %}
 			</div>
-
-		</div>
-		<div class="col-lg">
-			<table class="table table-dark table-bordered ">
-			<thead class="thead-dark">
-				<tr>
-					<th>
-					Sort by	
-					</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td><a href="?sort_by=title">Title</a></td>
-				</tr>
-				<tr>
-					<td><a href="?sort_by=created_on">Created on</a></td>
-				</tr>
-				<tr>
-					<td><a href="?sort_by=timed_on">Timed on</a></td>
-				</tr>
-				<tr>
-					<td><a href="?sort_by=recently-timed">Recently timed</a></td>
-				</tr>
-				<tr>
-					<td><a href="?sort_by=recently-created">Recent created</a></td>
-				</tr>
-			</tbody>
-			</tbody>
-			</tbody>
-		</table>
-	</div>	
-		</div>
+		</div >		
 		
 {% endblock content %}

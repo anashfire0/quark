@@ -24,12 +24,17 @@ from rest_framework import viewsets
 class ReminderListView(LoginRequiredMixin, generic.ListView):
     template_name = 'reminder/reminder_list.html'
     context_object_name = 'reminders'
+    paginate_by = 8
 
     def get(self, request, *args, **kwargs):
-        # raka.apply_async(('Kan hai re raka',), countdown=2)
 
         #implementing sorting
-        sort_by = request.GET.get('sort_by', 'timed_on').lower()
+        if request.COOKIES.get('sorting_by'):
+            sort_by=request.COOKIES.get('sorting_by')
+
+        if request.GET.get('sort_by'):
+            sort_by = request.GET.get('sort_by', 'timed_on').lower()
+
         if sort_by == 'recently-timed': 
             self.queryset = [x 
                             for x in 
@@ -47,6 +52,7 @@ class ReminderListView(LoginRequiredMixin, generic.ListView):
 
         #implementing searching
         if request.GET.get('reminder_search', None):
+            self.paginate_by = None
             self.queryset = get_user(request).reminders.filter(title__icontains=request.GET.get('reminder_search'))
             if not self.queryset.exists():
                 messages.error(request, 'Not Found')
@@ -54,7 +60,9 @@ class ReminderListView(LoginRequiredMixin, generic.ListView):
                 # self.get_context_data(search_empty=
                 #     'Did not find any title containing' 
                 #     f'{request.GET.get("reminder_search")}.')
-        return super().get(request, *args, **kwargs)
+        response = super().get(request, *args, **kwargs)
+        response.set_cookie('sorting_by', sort_by)
+        return response
 
 
 class ReminderDetailView(LoginRequiredMixin, generic.DetailView):
